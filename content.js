@@ -1,34 +1,46 @@
-// Function to remove the watermark
+console.log('[ClearMark] content script loaded');
+
 function removeWatermark() {
-    const watermark = document.querySelector('.watermark');
-    if (watermark && watermark.style.display !== 'none') {
-        watermark.style.display = 'none';
-        chrome.storage.sync.set({ watermarkHidden: true });
+    // Try several likely selectors
+    const selectors = [
+        '.watermark',
+        '#watermark',
+        '[class*="watermark"]',
+        '[id*="watermark"]'
+    ];
+
+    for (const sel of selectors) {
+        document.querySelectorAll(sel).forEach(el => {
+            if (el.style.display !== 'none') {
+                el.style.display = 'none';
+                console.log('[ClearMark] hid element matching', sel, el);
+                chrome.storage.sync.set({ watermarkHidden: true });
+            }
+        });
     }
 }
 
-// Function to handle mutations in the DOM
-function handleMutations(mutationsList, observer) {
-    for (const mutation of mutationsList) {
-        // Check if nodes were added or attributes changed
-        if (mutation.type === 'childList' || mutation.type === 'attributes') {
-            removeWatermark();
-        }
-    }
-}
-
-// Set up a MutationObserver to watch for changes in the DOM
-const observer = new MutationObserver(handleMutations);
-
-// Start observing the document with the configured parameters
-observer.observe(document.body, {
-    childList: true,       // Observe direct children of the body
-    subtree: true,         // Observe all descendants of the body
-    attributes: true,      // Observe attribute changes
-    attributeFilter: ['style', 'class'] // Only observe changes to 'style' or 'class' attributes
-});
-
-// Initial check when the DOM is fully loaded
-document.addEventListener('DOMContentLoaded', () => {
+function handleMutations() {
     removeWatermark();
-});
+}
+
+function start() {
+    if (!document.body) {
+        console.warn('[ClearMark] no document.body yet');
+        return;
+    }
+    const observer = new MutationObserver(handleMutations);
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['style', 'class']
+    });
+    removeWatermark(); // initial run
+}
+
+if (document.body) {
+    start();
+} else {
+    document.addEventListener('DOMContentLoaded', start, { once: true });
+}
