@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "ClearMark",
-    "version": "1.1",
+    "version": "1.1.1",
     "description": "watermark manipulator for documentaryarea.com",
     "permissions": [
         "activeTab",
@@ -13,7 +13,7 @@
     },
     "content_scripts": [
         {
-            "matches": ["<all_urls>"],
+            "matches": ["*://*documentaryarea.com/*"],
             "js": ["content.js"]
         }
     ],
