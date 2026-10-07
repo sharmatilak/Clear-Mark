@@ -1,6 +1,10 @@
 # Clear-Mark
 ClearMark: The Documentary Area Watermark Eraser
 
+<div align="center">
+  <img src="icon.png" alt="Logo" width="400">
+</div>
+
 ## How To Download
  📩 [Click To Download](https://github.com/acridsoul/Clear-Mark/archive/refs/heads/main.zip)
  - Or use git clone
@@ -21,3 +25,4 @@ ClearMark: The Documentary Area Watermark Eraser
 ## TO-DO
 - [x] Make it persistent through all videos
 - [x] For now you have to click the extension every time you load a new video
+- [ ] Make it Firefox compatible
